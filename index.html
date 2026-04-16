@@ -44,6 +44,60 @@
     }
     .fade-in { animation: fadeIn 0.5s ease-out both; }
     .uni-fb { display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:10px;font-weight:800;color:#fff;flex-shrink:0; }
+
+    /* ─── Video thumbnails ─── */
+    .video-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      background: #0a0a0a;
+      box-shadow: 0 10px 32px -8px rgba(2, 69, 26, 0.18);
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s ease;
+    }
+    .video-thumb:hover { transform: translateY(-3px); box-shadow: 0 22px 48px -10px rgba(2, 69, 26, 0.28); }
+    .video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .video-thumb:hover img { transform: scale(1.04); }
+    .video-thumb::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
+      pointer-events: none;
+    }
+    .video-play {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.95);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      transition: transform 0.25s ease, background 0.25s ease;
+      z-index: 2;
+    }
+    .video-thumb:hover .video-play { transform: translate(-50%, -50%) scale(1.08); background: #fff; }
+    .video-play svg { width: 26px; height: 26px; color: #02451a; margin-left: 3px; }
+    .video-label {
+      position: absolute; left: 14px; bottom: 12px;
+      color: #fff; font-weight: 700; font-size: 13px;
+      letter-spacing: 0.2px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      z-index: 2;
+    }
+    .video-featured .video-play { width: 84px; height: 84px; }
+    .video-featured .video-play svg { width: 34px; height: 34px; margin-left: 4px; }
+    .video-featured .video-label { font-size: 15px; left: 20px; bottom: 18px; }
+    .video-rank {
+      position: absolute; top: 12px; left: 12px;
+      background: rgba(2, 69, 26, 0.92);
+      color: #fff; font-weight: 800; font-size: 12px;
+      padding: 4px 10px; border-radius: 999px;
+      letter-spacing: 0.3px;
+      z-index: 2;
+    }
+    .video-thumb iframe { width: 100%; height: 100%; border: 0; }
   </style>
 </head>
 <body class="bg-[#fafbfa] min-h-screen">
@@ -89,6 +143,34 @@
             <div className="uni-fb" style={{background:B}}>{fb||name[0]}</div>
           )}
           <span className="text-xs font-semibold text-gray-800">{name}</span>
+        </div>
+      );
+    }
+
+    /* ─── Video Thumb (lazy iframe) ─── */
+    function VideoThumb({ id, title, featured, rank }) {
+      const [play, setPlay] = useState(false);
+      const thumb = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+      const fallback = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+      return (
+        <div className={`video-thumb ${featured ? 'video-featured' : ''}`} onClick={() => !play && setPlay(true)}>
+          {play ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`}
+              title={title || '합격생 인터뷰 영상'}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <>
+              <img src={thumb} alt={title} onError={(e) => { if (e.currentTarget.src !== fallback) e.currentTarget.src = fallback; }} />
+              {rank && <span className="video-rank">#{rank}</span>}
+              <div className="video-play" aria-label="영상 재생">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+              {title && <span className="video-label">{title}</span>}
+            </>
+          )}
         </div>
       );
     }
@@ -307,6 +389,17 @@
     // m=남학생, f=여학생 (이화여대→여, 의상학과→여 등 맥락 기반 판단)
     const GENDERS = ['f','m','m','m','m','f','m','m','f','f','m','f','m'];
 
+    /* ─── Featured interview videos ─── */
+    const videos = [
+      { id: 'YQINLnO7pRU', title: '' },
+      { id: 'Equ_OHch3bY', title: '' },
+      { id: 'H4LMePpPWbA', title: '' },
+      { id: '2H4FtZUUaDg', title: '' },
+      { id: '375FyoBzqxQ', title: '' },
+      { id: 'orbD-_U8foQ', title: '' },
+      { id: 'e2IdJU_ehBI', title: '' },
+    ];
+
     /* ══════════════════════════════════════════
        APP
        ══════════════════════════════════════════ */
@@ -341,7 +434,39 @@
             ))}
           </div>
 
+          {/* Featured videos */}
+          <div className="mb-14">
+            <div className="text-center mb-6">
+              <span className="inline-flex items-center gap-1.5 bg-brand-500 text-white px-3 py-1 rounded-full text-[10px] font-bold tracking-wider mb-3">
+                <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                LIVE INTERVIEW
+              </span>
+              <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 leading-tight">
+                영상으로 만나는 <span className="text-brand-500">합격생의 진짜 이야기</span>
+              </h3>
+              <p className="text-gray-400 text-xs md:text-sm mt-1.5">재생 버튼을 눌러 생생한 합격 후기를 확인해보세요.</p>
+            </div>
+
+            {/* Featured (#1) */}
+            <div className="mb-4">
+              <VideoThumb id={videos[0].id} title={videos[0].title} featured rank={1} />
+            </div>
+
+            {/* Rest grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+              {videos.slice(1).map((v, i) => (
+                <VideoThumb key={i} id={v.id} title={v.title} rank={i + 2} />
+              ))}
+            </div>
+          </div>
+
           {/* Cards */}
+          <div className="text-center mb-6">
+            <h3 className="text-xl md:text-2xl font-extrabold text-gray-900 leading-tight">
+              <span className="text-brand-500">실제 합격생</span>들의 한 줄 후기
+            </h3>
+            <p className="text-gray-400 text-xs md:text-sm mt-1.5">카드를 눌러 자세한 이야기를 확인해보세요.</p>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {cards.map((c, i) => <Card key={i} idx={i} gender={GENDERS[i]} {...c} />)}
           </div>
