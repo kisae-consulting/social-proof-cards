@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>입시의 기세 - 2026 합격생 후기</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <!-- Babel는 반드시 7.x로 고정. 8.x는 JSX automatic runtime(import 문)을 내보내 in-browser 변환이 깨져 전체 백지가 됨 -->
+  <script src="https://unpkg.com/@babel/standalone@7.23.6/babel.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -86,9 +87,30 @@
       text-shadow: 0 2px 8px rgba(0,0,0,0.6);
       z-index: 2;
     }
+    .video-tags {
+      position: absolute; left: 12px; right: 12px; bottom: 12px;
+      display: flex; flex-wrap: wrap; gap: 4px 6px;
+      z-index: 2;
+    }
+    .video-tag {
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      color: #fff;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.28);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+      white-space: nowrap;
+      line-height: 1.4;
+    }
     .video-featured .video-play { width: 84px; height: 84px; }
     .video-featured .video-play svg { width: 34px; height: 34px; margin-left: 4px; }
     .video-featured .video-label { font-size: 15px; left: 20px; bottom: 18px; }
+    .video-featured .video-tags { left: 18px; right: 18px; bottom: 16px; gap: 5px 7px; }
+    .video-featured .video-tag { font-size: 13px; padding: 4px 12px; }
     .video-rank {
       position: absolute; top: 12px; left: 12px;
       background: rgba(2, 69, 26, 0.92);
