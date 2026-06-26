@@ -1,4 +1,5 @@
 node_modules/
-app.js
-styles.css
+# 빌드 산출물만 무시 (루트 한정). src/styles.css 같은 소스는 추적해야 함.
+/app.js
+/styles.css
 .omc/
