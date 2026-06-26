@@ -1,0 +1,16 @@
+{
+  "name": "social-proof-cards",
+  "version": "1.0.0",
+  "private": true,
+  "description": "입시의 기세 2026 합격생 후기 카드 페이지",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.5"
+  }
+}

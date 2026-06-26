@@ -3,7 +3,7 @@ services:
     name: social-proof-cards
     runtime: static
     staticPublishPath: .
-    buildCommand: ""
+    buildCommand: "npm ci && npm run build"
     headers:
       - path: /*
         name: Cache-Control
